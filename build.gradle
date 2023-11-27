@@ -22,13 +22,28 @@ repositories {
 }
 
 dependencies {
+	// Spring boot Starter Dependencies
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+	/*
+	// OpenApi Dependency
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
+
+	// XML
+	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml'
+	 */
+
+	// Project Lombok and devtools
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+	// h2
 	runtimeOnly 'com.h2database:h2'
 	annotationProcessor 'org.projectlombok:lombok'
+
+	// Test Dependency
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
