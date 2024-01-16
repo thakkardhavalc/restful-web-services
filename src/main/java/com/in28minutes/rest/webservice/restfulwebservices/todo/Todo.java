@@ -3,6 +3,8 @@ package com.in28minutes.rest.webservice.restfulwebservices.todo;
 /**
  * Created By dhhaval thakkar on 2024-01-04
  */
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,6 +17,8 @@ public class Todo {
     private int id;
     private String username;
     private String description;
+
+    @JsonFormat(pattern = "MM-DD-YYYY")
     private LocalDate targetDate;
     private boolean done;
 
