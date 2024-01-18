@@ -18,7 +18,7 @@ public class Todo {
     private String username;
     private String description;
 
-    @JsonFormat(pattern = "MM-DD-YYYY")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate targetDate;
     private boolean done;
 

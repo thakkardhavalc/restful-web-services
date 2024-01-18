@@ -4,36 +4,45 @@ package com.in28minutes.rest.webservice.restfulwebservices.config;
  * Created By dhhaval thakkar on 2024-01-04
  */
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import java.util.Arrays;
-import java.util.List;
+import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
-@EnableWebMvc
-@RequiredArgsConstructor
 public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
-       http.cors(httpSecurityCorsConfigurer ->
-               httpSecurityCorsConfigurer.configurationSource(request -> {
-                   CorsConfiguration configuration = new CorsConfiguration();
-                   configuration.setAllowedOrigins(List.of("http://localhost:3000"));
-                   configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE"));
-                   configuration.setAllowedHeaders(List.of("*"));
-
-                   return configuration;
-       }));
-       http.csrf(AbstractHttpConfigurer::disable);
-       return http.build();
+       return
+               http
+                       .authorizeHttpRequests(auth -> auth
+                               .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.OPTIONS, "/**"))
+                               .permitAll()
+                               .anyRequest().authenticated())
+                       .httpBasic(withDefaults())
+                       .sessionManagement(session ->
+                               session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                       .csrf(AbstractHttpConfigurer::disable)
+                       .build();
     }
 
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**")
+                        .allowedMethods("*")
+                        .allowedOrigins("http://localhost:3000");
+            }
+        };
+    }
 }
