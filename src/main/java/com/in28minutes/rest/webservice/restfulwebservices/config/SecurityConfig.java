@@ -1,8 +1,11 @@
+/*
 package com.in28minutes.rest.webservice.restfulwebservices.config;
 
+*/
 /**
  * Created By dhhaval thakkar on 2024-01-04
- */
+ *//*
+
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -46,3 +49,4 @@ public class SecurityConfig {
         };
     }
 }
+*/
