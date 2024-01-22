@@ -1,5 +1,6 @@
 package com.in28minutes.rest.webservice.restfulwebservices.todo;
 
+import com.in28minutes.rest.webservice.restfulwebservices.todo.repository.TodoRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -7,36 +8,41 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created By dhhaval thakkar on 2024-01-04
  */
-//@RestController
-public class TodoResource {
+@RestController
+public class TodoJpaResource {
 
-    private TodoService todoService;
+    private TodoRepository todoRepository;
 
-    public TodoResource(TodoService todoService) {
-        this.todoService = todoService;
+    public TodoJpaResource(TodoRepository todoRepository) {
+        this.todoRepository = todoRepository;
     }
 
     @GetMapping("users/{username}/todos")
     public List<Todo> retrieveTodos(@PathVariable String username) {
-        return todoService.findByUsername(username);
+        //return todoService.findByUsername(username);
+        return todoRepository.findByUsername(username);
     }
 
     @GetMapping("users/{username}/todos/{id}")
-    public Todo retrieveTodos(@PathVariable String username,
-                              @PathVariable int id) {
-        return todoService.findById(id);
+    public Optional<Todo> retrieveTodos(@PathVariable String username,
+                                        @PathVariable int id) {
+        //return todoService.findById(id);
+        return todoRepository.findById(id);
     }
 
     @DeleteMapping("users/{username}/todos/{id}")
     public ResponseEntity<Void> deleteTodos(@PathVariable String username,
                                             @PathVariable int id) {
-        todoService.deleteById(id);
+        //todoService.deleteById(id);
+        todoRepository.deleteById(id);
         return  ResponseEntity.noContent().build();
     }
 
@@ -45,7 +51,8 @@ public class TodoResource {
                                            @PathVariable int id,
                                            @RequestBody Todo todo) {
 
-        todoService.updateTodo(todo);
+        //todoService.updateTodo(todo);
+        todoRepository.save(todo);
         return todo;
     }
 
@@ -53,7 +60,8 @@ public class TodoResource {
     public Todo createTodo(@PathVariable String username,
                            @RequestBody Todo todo) {
 
-        return todoService.addTodo(username, todo.getDescription(),
-                todo.getTargetDate(), todo.isDone());
+        todo.setUsername(username);
+        todo.setId(null);
+        return todoRepository.save(todo);
     }
 }
